@@ -23,6 +23,8 @@ jobs:
         pip install -r requirements.txt
     - name: Set Tavily API Key
       run: echo "TAVILY_API_KEY=${{ secrets.TAVILY_API_KEY }}" >> $GITHUB_ENV
+    - name: Set OpenAI API Key
+      run: echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
     - name: Test with pytest
       run: |
         cd backend # Navigate to the backend directory
