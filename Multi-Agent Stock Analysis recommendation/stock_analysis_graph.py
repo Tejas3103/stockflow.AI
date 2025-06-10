@@ -45,7 +45,7 @@ import pandas as pd
 import numpy as np
 
 # Load environment variables
-load_dotenv()
+# load_dotenv()
 
 def get_llm():
     """Get the appropriate LLM based on available API keys."""
