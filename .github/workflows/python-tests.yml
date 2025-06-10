@@ -26,6 +26,9 @@ jobs:
     - name: Set OpenAI API Key
       run: echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
     - name: Test with pytest
+      env:
+        TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
         cd backend # Navigate to the backend directory
         pytest test_api.py # Run the test file 
