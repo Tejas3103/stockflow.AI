@@ -2,7 +2,7 @@ import sys
 import os
 # Add the directory containing your LangGraph code to the Python path
 # Using a path relative to the expected working directory (project root)
-sys.path.insert(0, './Multi-Agent Stock Analysis recommendation')
+sys.path.insert(0, '../Multi-Agent Stock Analysis recommendation')
 
 # Import your LangGraph components (should be discoverable now)
 from stock_analysis_graph import create_stock_analysis_graph, StockAnalysisState
