@@ -45,12 +45,16 @@ import pandas as pd
 import numpy as np
 
 # Load environment variables
-load_dotenv()
+# load_dotenv()
 
 def get_llm():
     """Get the appropriate LLM based on available API keys."""
+    # Debugging: Check environment variables
+    openai_key_debug = os.getenv("OPENAI_API_KEY")
+    print(f"DEBUG: OPENAI_API_KEY status: {openai_key_debug[:5] + '...' if openai_key_debug else 'Not set'}")
+
     # Check for OpenAI API key
-    if os.getenv("OPENAI_API_KEY"):
+    if openai_key_debug:
         print("Using OpenAI API")
         return ChatOpenAI(
             model="gpt-3.5-turbo",
