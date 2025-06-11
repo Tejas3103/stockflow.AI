@@ -32,3 +32,16 @@ jobs:
       run: |
         cd backend # Navigate to the backend directory
         pytest test_api.py # Run the test file
+
+  notify-on-failure:
+    needs: build  # This job depends on the 'build' job
+    if: failure() # This job will only run if the 'build' job fails
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack Alert
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # Use the secret you set up
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{
+            "text": ":x: *CI/CD Failed* in `${{ github.repository }}`\nBranch: `${{ github.ref }}`\nCommit: <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>\nWorkflow: *${{ github.workflow }}* - Run: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Details>"
+          }' $SLACK_WEBHOOK_URL
