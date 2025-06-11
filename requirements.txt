@@ -28,4 +28,4 @@ tavily-python>=0.3.1,<0.4.0
 pytest>=7.0
 
 # Utilities
-typing-extensions==4.14.0 
+typing-extensions==4.14.0

@@ -31,4 +31,4 @@ jobs:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
         cd backend # Navigate to the backend directory
-        pytest test_api.py # Run the test file 
+        pytest test_api.py # Run the test file
