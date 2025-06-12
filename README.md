@@ -38,7 +38,24 @@ StockFlow.AI is an intelligent stock analysis platform that combines qualitative
 - Python 3.8+
 - API keys for OpenAI and Tavily
 
-### Installation
+### 🎯 One-Command Setup (Recommended)
+
+**For Linux/Mac:**
+```bash
+git clone https://github.com/YOUR_USERNAME/stockflow.AI.git
+cd stockflow.AI
+chmod +x setup.sh
+./setup.sh
+```
+
+**For Windows:**
+```bash
+git clone https://github.com/YOUR_USERNAME/stockflow.AI.git
+cd stockflow.AI
+# Run setup manually or use the steps below
+```
+
+### 🔧 Manual Setup
 
 1. **Clone the repository**
    ```bash
@@ -56,7 +73,7 @@ StockFlow.AI is an intelligent stock analysis platform that combines qualitative
    pip install -r requirements.txt
    
    # Set up environment variables
-   cp .env.example .env
+   cp env.example .env
    # Edit .env with your API keys
    ```
 
@@ -66,16 +83,27 @@ StockFlow.AI is an intelligent stock analysis platform that combines qualitative
    npm install
    ```
 
-4. **Run the application**
-   ```bash
-   # Terminal 1: Start backend
-   cd backend
-   uvicorn main:app --reload
-   
-   # Terminal 2: Start frontend
-   cd frontend
-   npm run dev
-   ```
+### 🚀 Running the Application
+
+**Option 1: Single Command (Recommended)**
+```bash
+# Linux/Mac
+./start.sh
+
+# Windows
+start.bat
+```
+
+**Option 2: Manual (Two Terminals)**
+```bash
+# Terminal 1: Start backend
+cd backend
+python -m uvicorn main:app --reload
+
+# Terminal 2: Start frontend
+cd frontend
+npm run dev
+```
 
 5. **Open your browser**
    - Frontend: http://localhost:5173
@@ -104,6 +132,10 @@ stockflow.AI/
 │   ├── stock_analysis_graph.py    # LangGraph workflow
 │   ├── qualitative_tools.py       # News & sentiment tools
 │   └── quantitative_tools.py      # Financial analysis tools
+├── start.sh                 # Single command startup (Linux/Mac)
+├── start.bat                # Single command startup (Windows)
+├── setup.sh                 # Automated setup script
+├── env.example              # Environment variables template
 └── README.md
 ```
 
