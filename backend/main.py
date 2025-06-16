@@ -18,6 +18,15 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
+# Configure logging at the beginning of your application
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+# Define different logger instances for specific purposes
+error_logger = logging.getLogger("error_log")   # For critical errors
+app_logger = logging.getLogger("app_log")       # For general application info/debug messages
+audit_logger = logging.getLogger("audit_log")   # For request auditing and tracing
+
 app = FastAPI() #this app object is what uvicorn runs and handles api routes
 
 # Configure CORS
@@ -104,7 +113,7 @@ async def chat(message: Message):
     })
 
     # Basic parsing for stock symbol (assuming format "SYMBOL query...")
-        parts = user_query.split(maxsplit=1)
+    parts = user_query.split(maxsplit=1)
     if len(parts) < 2:
         return {"response": "Please provide a stock symbol and your query (e.g., AAPL Analyze the stock)."}
 
