@@ -14,22 +14,18 @@ from stock_analysis_graph import create_stock_analysis_graph, StockAnalysisState
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from utils.logger import get_logger
+from dotenv import load_dotenv
 
-# Configure logging level
-logging.basicConfig(level=logging.INFO)
+load_dotenv()
 
-# Set up different loggers for different purposes
-app_logger = get_logger("app", log_type="application")
-error_logger = get_logger("errors", log_type="errors", log_level=logging.ERROR)
-audit_logger = get_logger("audit", log_type="audit", json_format=True)
 
-# Log application startup
-app_logger.info("Starting application", extra={
-    "startup_time": datetime.now().isoformat(),
-    "python_version": sys.version,
-    "environment": os.getenv("ENVIRONMENT", "development")
-})
+# Configure logging at the beginning of your application
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+# Define different logger instances for specific purposes
+error_logger = logging.getLogger("error_log")   # For critical errors
+app_logger = logging.getLogger("app_log")       # For general application info/debug messages
+audit_logger = logging.getLogger("audit_log")   # For request auditing and tracing
 
 app = FastAPI() #this app object is what uvicorn runs and handles api routes
 
@@ -117,7 +113,7 @@ async def chat(message: Message):
     })
 
     # Basic parsing for stock symbol (assuming format "SYMBOL query...")
-        parts = user_query.split(maxsplit=1)
+    parts = user_query.split(maxsplit=1)
     if len(parts) < 2:
         return {"response": "Please provide a stock symbol and your query (e.g., AAPL Analyze the stock)."}
 
