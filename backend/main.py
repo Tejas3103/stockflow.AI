@@ -10,6 +10,9 @@ from stock_analysis_graph import create_stock_analysis_graph, StockAnalysisState
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = FastAPI() #this app object is what uvicorn runs and handles api routes
 
