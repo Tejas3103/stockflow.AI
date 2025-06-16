@@ -7,4 +7,7 @@ client = TestClient(app)
 def test_read_root():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json() == {"Hello": "World"}
+    data = response.json()
+    assert data["Hello"] == "World"
+    assert data["status"] == "running"
+    assert "timestamp" in data
