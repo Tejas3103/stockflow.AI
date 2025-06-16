@@ -31,7 +31,7 @@ app_logger.info("Starting application", extra={
     "environment": os.getenv("ENVIRONMENT", "development")
 })
 
-app = FastAPI()
+app = FastAPI() #this app object is what uvicorn runs and handles api routes
 
 # Configure CORS
 origins = [
@@ -117,16 +117,12 @@ async def chat(message: Message):
     })
 
     # Basic parsing for stock symbol (assuming format "SYMBOL query...")
-    parts = user_query.split(maxsplit=1)
+        parts = user_query.split(maxsplit=1)
     if len(parts) < 2:
-        app_logger.warning("Invalid query format received", extra={
-            "request_id": request_id,
-            "query": user_query
-        })
         return {"response": "Please provide a stock symbol and your query (e.g., AAPL Analyze the stock)."}
 
-    stock_symbol = parts[0].upper() # Assume first word is symbol
-    query_text = parts[1] # The rest is the query input for the graph
+    stock_symbol = parts[0].upper()
+    query_text = parts[1]
     app_logger.debug("Parsed query", extra={
         "request_id": request_id,
         "symbol": stock_symbol,

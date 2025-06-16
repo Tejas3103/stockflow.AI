@@ -18,7 +18,12 @@ def research_company_fundamentals(ticker_or_company: str) -> str:
         In-depth business information including model, strategy, and competition
     """
     try:
-        headers = {"x-api-key": "a87e4d6f-459f-4dbc-924e-629625bddc83"}
+        exa_api_key = os.getenv("EXA_API_KEY")
+        if not exa_api_key:
+            raise ValueError("EXA_API_KEY not found in environment variables")
+        
+        
+        headers = {"x-api-key":exa_api_key}
         params = {
             "query": f"{ticker_or_company} business model strategy competition",
             "useAutoprompt": True,
@@ -61,7 +66,11 @@ def analyze_industry_trends(industry: str, region: str = "global") -> str:
         Analysis of industry trends, challenges, and opportunities
     """
     try:
-        headers = {"x-api-key": "a87e4d6f-459f-4dbc-924e-629625bddc83"}
+        exa_api_key = os.getenv("EXA_API_KEY")
+        if not exa_api_key:
+            raise ValueError("EXA_API_KEY not found in environment variables.")
+ 
+        headers = {"x-api-key": exa_api_key}
         params = {
             "query": f"latest trends in {industry} industry {region} market {datetime.now().strftime('%Y')}",
             "useAutoprompt": True,
