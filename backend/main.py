@@ -11,7 +11,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-app = FastAPI()
+app = FastAPI() #this app object is what uvicorn runs and handles api routes
 
 # Configure CORS
 origins = [
@@ -50,9 +50,9 @@ async def chat(message: Message):
     if len(parts) < 2:
         return {"response": "Please provide a stock symbol and your query (e.g., AAPL Analyze the stock)."}
 
-    stock_symbol = parts[0].upper() # Assume first word is symbol
+    # Assume first word is symbol
     query_text = parts[1] # The rest is the query input for the graph
-    print(f"Parsed Symbol: {stock_symbol}, Query: {query_text}")
+    print(f" stock_symbol = parts[0].upper()Parsed Symbol: {stock_symbol}, Query: {query_text}")
 
     try:
         # Create initial state for LangGraph
