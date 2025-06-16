@@ -65,11 +65,11 @@ class LoggerManager:
         return cls._instance
     
     def _initialize(self):
-        """Initialize the logger manager"""
+        """Initialize the logger manager and create log directories"""
         self.LOGS_DIR = Path(__file__).parent.parent / "logs"
         self.LOGS_DIR.mkdir(exist_ok=True)
         
-        # Create subdirectories for different log types
+        # Define log directories and create them
         self.APP_LOGS_DIR = self.LOGS_DIR / "application"
         self.ERROR_LOGS_DIR = self.LOGS_DIR / "errors"
         self.AUDIT_LOGS_DIR = self.LOGS_DIR / "audit"
@@ -121,10 +121,15 @@ class LoggerManager:
         
         # File Handler
         if log_to_file:
-            # Determine log directory based on type
-            log_dir = getattr(self, f"{log_type.upper()}_LOGS_DIR")
-            
-            # Create dated log file
+            log_dir = getattr(
+                self,
+                {
+                    "application": "APP_LOGS_DIR",
+                    "errors": "ERROR_LOGS_DIR",
+                    "audit": "AUDIT_LOGS_DIR"
+                }.get(log_type.lower(), "APP_LOGS_DIR")  # Default to APP_LOGS_DIR
+            )
+
             current_date = datetime.now().strftime("%Y-%m-%d")
             log_file = log_dir / f"{name}_{current_date}.log"
             
