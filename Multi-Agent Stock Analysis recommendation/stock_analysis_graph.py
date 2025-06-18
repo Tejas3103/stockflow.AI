@@ -19,6 +19,7 @@ from langgraph.graph import StateGraph
 from langgraph.prebuilt import create_react_agent
 
 # LangChain imports
+from langchain_ollama import ChatOllama 
 from langchain_core.tools import tool
 from langchain_openai import ChatOpenAI, AzureChatOpenAI
 from langchain_core.messages import HumanMessage, AIMessage
@@ -48,12 +49,22 @@ import numpy as np
 load_dotenv()
 
 def get_llm():
-    """Get the appropriate LLM based on available API keys."""
-    # Debugging: Check environment variables
-    openai_key_debug = os.getenv("OPENAI_API_KEY")
-    print(f"DEBUG: OPENAI_API_KEY status: {openai_key_debug[:5] + '...' if openai_key_debug else 'Not set'}")
+    """Get the appropriate LLM based on environment variable."""
+    model_provider = os.getenv("LLM_MODEL_PROVIDER", "openai").lower()
+    print(f"DEBUG: LLM_MODEL_PROVIDER: {model_provider}")
 
-    # Check for OpenAI API key
+    if model_provider == "ollama":
+        ollama_model = os.getenv("OLLAMA_MODEL", "llama3")
+        ollama_base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+        print(f"Using Ollama model: {ollama_model} at {ollama_base_url}")
+        return ChatOllama(
+            model=ollama_model,
+            base_url=ollama_base_url,
+            temperature=0,
+            streaming=True
+        )
+
+    openai_key_debug = os.getenv("OPENAI_API_KEY")
     if openai_key_debug:
         print("Using OpenAI API")
         return ChatOpenAI(
@@ -61,8 +72,7 @@ def get_llm():
             temperature=0,
             streaming=True
         )
-    
-    # Check for Azure OpenAI API key and endpoint
+
     azure_key = os.getenv("AZURE_OPENAI_API_KEY")
     azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
     if azure_key and azure_endpoint and azure_key != "your-azure-openai-api-key":
@@ -73,8 +83,8 @@ def get_llm():
             temperature=0,
             streaming=True
         )
-    
-    raise ValueError("No valid API key found. Please set either OPENAI_API_KEY or AZURE_OPENAI_API_KEY and AZURE_OPENAI_ENDPOINT")
+
+    raise ValueError("No valid LLM configuration found. Please set LLM_MODEL_PROVIDER to 'ollama', or provide OpenAI/Azure keys.")
 
 def create_qualitative_agent():
     """Create the qualitative analysis agent.
@@ -245,6 +255,20 @@ def create_stock_analysis_graph():
     
     # Compile the graph
     return workflow.compile()
+
+def extract_stock_info_llm(llm, user_query: str):
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", "You are a helpful assistant that extracts a stock symbol and the user's intent from a natural language stock query. Respond ONLY with a JSON object with two keys: 'stock_symbol' (e.g., 'AAPL', 'MSFT', 'TSLA') and 'intent' (e.g., 'price', 'buy recommendation', 'news', 'trend analysis', etc.). If the stock symbol is not explicitly mentioned but can be inferred, do so. If you cannot find a symbol, set 'stock_symbol' to 'UNKNOWN'."),
+        ("human", user_query)
+    ])
+    chain = prompt | llm | StrOutputParser()
+    llm_response = chain.invoke({"input": user_query})
+    print("DEBUG: LLM extraction raw response:", llm_response)
+    try:
+        return json.loads(llm_response)
+    except Exception as e:
+        print("Error parsing LLM response:", e)
+        return {"stock_symbol": "UNKNOWN", "intent": user_query}
 
 if __name__ == "__main__":
     # Create the graph
